@@ -1,2 +1,4 @@
 ./client/node_modules
 ./client/build
+./client/.env.local
+./server/.env
