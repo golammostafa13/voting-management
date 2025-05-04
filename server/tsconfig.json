@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "rootDir": "./",
+    "outDir": "./build",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+  "include": ["./"],
+  "exclude": ["node_modules", "tests"],
+  "watch": true,
+  "paths": {
+    "@/*": ["./*"]
+  }
+}
