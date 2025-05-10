@@ -8,6 +8,12 @@ export interface IStudent extends Document {
     otpExpires?: Date;
     verified: boolean;
     loginCount: number;
+    name: string;
+    department: string;
+    year: number;
+    address: string;
+    admittedDate: Date;
+    verifiedByAdmin: boolean;
 }
 
 const studentSchema = new Schema<IStudent>({
@@ -18,6 +24,12 @@ const studentSchema = new Schema<IStudent>({
     otpExpires: Date,
     verified: { type: Boolean, default: false },
     loginCount: { type: Number, default: 0 },
+    name: { type: String, required: true },
+    department: { type: String, required: true },
+    year: { type: Number, required: true },
+    address: { type: String, required: true },
+    admittedDate: { type: Date, required: true },
+    verifiedByAdmin: { type: Boolean, default: false },
 });
 
 const StudentModel = mongoose.models.students || mongoose.model<IStudent>("students", studentSchema);

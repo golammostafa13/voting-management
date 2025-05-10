@@ -6,8 +6,9 @@ import helmet from 'helmet'
 import jwt from 'jsonwebtoken'
 import connectDB from './config/connectDb'
 import corsOptions from './config/corseOption'
+import commonRoutes from "./routes/commonRoutes"
 import studentRoutes from "./routes/studentRoutes"
-import { createAccessToken } from './utils/jwt'
+import { createAccessToken, createRefreshToken } from './utils/jwt'
 
 dotenv.config()
 connectDB();
@@ -47,19 +48,27 @@ app.use(cookieParser())
 //         cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, sameSite: 'strict' }
 //     })
 // )
-app.post("/auth/refresh", (req, res) => {
+app.get("/api/auth/refresh", (req, res) => {
     const token = req.cookies.refreshToken;
     if (!token) return res.status(401).json({ message: "No refresh token" });
 
     try {
         const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as { studentId: string };
         const newAccessToken = createAccessToken({ studentId: decoded.studentId });
+        const refreshToken = createRefreshToken({ studentId: decoded.studentId });
 
         res.cookie("accessToken", newAccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: Number(process.env.ACCESS_TOKEN_TIMEOUT),
+        });
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: Number(process.env.REFRESH_TOKEN_TIMEOUT), // 20 min
         });
 
         res.json({ message: "Access token refreshed" });
@@ -70,6 +79,7 @@ app.post("/auth/refresh", (req, res) => {
 });
 
 app.use("/api/student", studentRoutes);
+app.use("/api/common", commonRoutes);
 
 // Catch-all route handler
 app.get('*', (req, res) => {
