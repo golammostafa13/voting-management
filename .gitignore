@@ -6,3 +6,4 @@
 # Server
 /server/node_modules
 /server/.env
+/server/public/uploads/photos/
